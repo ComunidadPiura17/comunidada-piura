@@ -24,7 +24,6 @@
       text-shadow: 0 0 12px #ffdd57, 0 0 24px #ff6f91;
       border-bottom: 2px solid rgba(255,255,255,0.2);
       animation: brillo 3s infinite alternate;
-      position: relative;
     }
 
     @keyframes moverFondo {
@@ -110,35 +109,29 @@
       margin-bottom: 10px;
     }
 
-    /* Botón de volver */
-    #btnVolver {
-      position: absolute;
-      right: 20px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: linear-gradient(45deg, #ffdd57, #ff4081);
-      border: none;
+    #cerrarSesion {
+      display: block;
+      width: fit-content;
+      margin: 20px auto;
+      background: linear-gradient(45deg, #ffdd57, #ff6f91);
+      color: black;
       padding: 10px 20px;
       border-radius: 10px;
-      color: black;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 12px #ffdd57;
-      transition: transform 0.3s, box-shadow 0.3s;
+      text-decoration: none;
+      box-shadow: 0 0 10px #ffdd57;
+      transition: transform 0.3s;
     }
 
-    #btnVolver:hover {
+    #cerrarSesion:hover {
       transform: scale(1.1);
-      box-shadow: 0 0 20px #ff4081, 0 0 40px #ffdd57;
+      box-shadow: 0 0 20px #ff6f91;
     }
-
   </style>
 </head>
 <body>
-  <header>
-    𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐
-    <button id="btnVolver" onclick="volverHome()">🏠 Volver a la página principal</button>
-  </header>
+  <header>𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐</header>
 
   <!-- Premios destacados -->
   <section>
@@ -187,15 +180,19 @@
     <div id="contador">Cargando...</div>
   </section>
 
+  <!-- Botón volver -->
+  <a id="cerrarSesion" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
+
   <script>
     /* ================== SEGURIDAD ================== */
     const autenticado = sessionStorage.getItem("autenticado");
-    if (!autenticado) {
+
+    if (autenticado !== "true") {
       window.location.href = "index.html";
     }
 
-    /* ================== BOTÓN VOLVER ================== */
     function volverHome() {
+      // Limpia la sesión y vuelve al home
       sessionStorage.removeItem("autenticado");
       window.location.href = "home.html";
     }
