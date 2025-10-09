@@ -109,7 +109,7 @@
       margin-bottom: 10px;
     }
 
-    #cerrarSesion {
+    #volverHome {
       display: block;
       width: fit-content;
       margin: 20px auto;
@@ -124,7 +124,7 @@
       transition: transform 0.3s;
     }
 
-    #cerrarSesion:hover {
+    #volverHome:hover {
       transform: scale(1.1);
       box-shadow: 0 0 20px #ff6f91;
     }
@@ -181,19 +181,18 @@
   </section>
 
   <!-- Botón volver -->
-  <a id="cerrarSesion" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
+  <a id="volverHome" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
 
   <script>
     /* ================== SEGURIDAD ================== */
     const autenticado = sessionStorage.getItem("autenticado");
 
     if (autenticado !== "true") {
-      window.location.href = "index.html";
+      window.location.href = "index.html"; // Redirige al login si no hay sesión
     }
 
     function volverHome() {
-      // Limpia la sesión y vuelve al home
-      sessionStorage.removeItem("autenticado");
+      // Solo vuelve al home, sin borrar la sesión
       window.location.href = "home.html";
     }
 
