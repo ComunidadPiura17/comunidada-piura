@@ -184,15 +184,17 @@
   <a id="volverHome" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
 
   <script>
-    /* ================== SEGURIDAD ================== */
+    /* ================== SEGURIDAD MEJORADA ================== */
     const autenticado = sessionStorage.getItem("autenticado");
+    const referrer = document.referrer;
 
-    if (autenticado !== "true") {
-      window.location.href = "index.html"; // Redirige al login si no hay sesión
+    // Si no está autenticado y no viene del home.html → redirige al index
+    if (autenticado !== "true" && !referrer.includes("home.html")) {
+      window.location.href = "index.html";
     }
 
     function volverHome() {
-      // Solo vuelve al home, sin borrar la sesión
+      // Vuelve al home sin eliminar la sesión
       window.location.href = "home.html";
     }
 
