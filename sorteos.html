@@ -24,6 +24,7 @@
       text-shadow: 0 0 12px #ffdd57, 0 0 24px #ff6f91;
       border-bottom: 2px solid rgba(255,255,255,0.2);
       animation: brillo 3s infinite alternate;
+      position: relative;
     }
 
     @keyframes moverFondo {
@@ -108,10 +109,36 @@
       text-shadow: 0 0 10px #ffdd57;
       margin-bottom: 10px;
     }
+
+    /* Botón de volver */
+    #btnVolver {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(45deg, #ffdd57, #ff4081);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: black;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 0 12px #ffdd57;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    #btnVolver:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #ff4081, 0 0 40px #ffdd57;
+    }
+
   </style>
 </head>
 <body>
-  <header>𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐</header>
+  <header>
+    𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐
+    <button id="btnVolver" onclick="volverHome()">🏠 Volver a la página principal</button>
+  </header>
 
   <!-- Premios destacados -->
   <section>
@@ -165,6 +192,12 @@
     const autenticado = sessionStorage.getItem("autenticado");
     if (!autenticado) {
       window.location.href = "index.html";
+    }
+
+    /* ================== BOTÓN VOLVER ================== */
+    function volverHome() {
+      sessionStorage.removeItem("autenticado");
+      window.location.href = "home.html";
     }
 
     /* ================== CONTADOR REGRESIVO ================== */
