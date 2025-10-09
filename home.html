@@ -727,6 +727,16 @@ body.light-mode .footer-section a { color: #065f46; }
   <!-- Header -->
 <header class="header">
   <img src="ComunidadPiura-removebg-preview.png" class="logo" />
+   <!-- 🔹 Perfil -->
+  <div class="perfil" onclick="togglePerfilMenu()">
+    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Perfil" class="perfil-img">
+    <span id="perfil-nombre">Usuario</span>
+    <div class="perfil-menu" id="perfil-menu">
+      <p id="perfil-email">correo@ejemplo.com</p>
+      <button onclick="cambiarNombre()">Cambiar nombre</button>
+      <a href="#" onclick="logout()"> Cerrar sesion</a>
+    </div>
+  </div> 
 <button class="menu-toggle" onclick="toggleMenu()">☰</button>
 
 <!-- Menú pantalla completa -->
@@ -741,16 +751,7 @@ body.light-mode .footer-section a { color: #065f46; }
 </div>
 
 
-  <!-- 🔹 Perfil -->
-  <div class="perfil" onclick="togglePerfilMenu()">
-    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Perfil" class="perfil-img">
-    <span id="perfil-nombre">Usuario</span>
-    <div class="perfil-menu" id="perfil-menu">
-      <p id="perfil-email">correo@ejemplo.com</p>
-      <button onclick="cambiarNombre()">Cambiar nombre</button>
-      <a href="#" onclick="logout()"> Cerrar sesion</a>
-    </div>
-  </div>
+ 
 </header>
 
   <!-- Contenido principal -->
