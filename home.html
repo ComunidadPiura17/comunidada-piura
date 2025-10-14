@@ -1,182 +1,426 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Halloween Elegante</title>
-
-  <!-- Fuente gótica elegante -->
-  <link href="https://fonts.googleapis.com/css2?family=Spectral+SC:wght@500;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <title>Login - Comunidad Piura</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcReMJly0vwqQtfircDFDpZwXu18Sd3bSMIOsRRLQyJ0irbFg3KC">
   <style>
-    /* ===============================
-       ESTILO HALLOWEEN BLANCO Y NEGRO
-       =============================== */
-    body {
+    * {
       margin: 0;
       padding: 0;
-      font-family: 'Spectral SC', serif;
-      background-color: #000;
-      color: #fff;
-      overflow: hidden;
+      box-sizing: border-box;
+      font-family: "Segoe UI", Tahoma, sans-serif;
     }
 
-    /* Fondo con neblina y brillo lunar */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: radial-gradient(ellipse at top, rgba(255,255,255,0.06), transparent 70%),
-                  linear-gradient(to bottom, rgba(255,255,255,0.02), rgba(0,0,0,0.95));
-      z-index: -2;
-    }
-
-    body::after {
-      content: "";
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: url('https://i.imgur.com/YmQo9tM.png'); /* textura sutil de telarañas */
-      background-size: cover;
-      opacity: 0.15;
-      z-index: -1;
-      mix-blend-mode: screen;
-    }
-
-    header, footer {
-      text-align: center;
-      padding: 1rem;
-      background: rgba(255,255,255,0.02);
-      border-bottom: 1px solid rgba(255,255,255,0.1);
-      text-shadow: 0 0 10px rgba(255,255,255,0.3);
-    }
-
-    h1, h2, h3 {
-      font-weight: 700;
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      text-shadow: 0 0 15px rgba(255,255,255,0.3);
-    }
-
-    main {
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #000000, #1c1c1c);
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 80vh;
-      text-align: center;
-      padding: 2rem;
+      align-items: center;
+      padding: 20px;
     }
 
-    button, .btn {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      padding: 0.7rem 1.5rem;
-      font-family: inherit;
-      font-size: 1rem;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover, .btn:hover {
-      background: rgba(255,255,255,0.2);
-      box-shadow: 0 0 20px rgba(255,255,255,0.3);
-      transform: scale(1.05);
-    }
-
-    /* Telarañas flotantes decorativas */
-    .web {
-      position: absolute;
-      width: 120px;
-      height: 120px;
-      background: url('https://i.imgur.com/D2Iq5vH.png') no-repeat center/contain;
-      opacity: 0.2;
-      animation: floatWeb 10s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    .web:nth-child(1) { top: 10%; left: 5%; transform: rotate(10deg); }
-    .web:nth-child(2) { top: 15%; right: 10%; transform: rotate(-15deg); }
-    .web:nth-child(3) { bottom: 10%; left: 15%; transform: rotate(25deg); }
-
-    @keyframes floatWeb {
-      0% { transform: translateY(0) scale(1); opacity: 0.15; }
-      100% { transform: translateY(-15px) scale(1.05); opacity: 0.3; }
-    }
-
-    /* Neblina animada */
-    .fog {
+    /* Loader */
+    #loader {
       position: fixed;
       top: 0; left: 0;
-      width: 200%;
-      height: 200%;
-      background: url('https://i.imgur.com/UtSmWlp.png') repeat;
-      background-size: cover;
-      opacity: 0.07;
-      animation: fogMove 60s linear infinite;
-      z-index: -3;
+      width: 100%; height: 100%;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      transition: opacity 1s ease;
     }
 
-    @keyframes fogMove {
-      from { transform: translate3d(0,0,0); }
-      to { transform: translate3d(-500px,0,0); }
+    #loader img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      animation: spin 3s linear infinite;
     }
 
-    footer {
-      font-size: 0.8rem;
-      opacity: 0.7;
-      border-top: 1px solid rgba(255,255,255,0.1);
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
 
-    /* Inputs y formularios */
-    input, textarea {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.2);
-      color: #fff;
-      padding: 0.5rem;
+    /* Caja principal */
+    .login-container {
+      display: none;
+      background: rgba(20, 20, 20, 0.95);
+      padding: 30px;
+      border-radius: 12px;
       width: 100%;
-      border-radius: 5px;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      animation: fadeIn 0.8s ease-in-out;
     }
 
-    input:focus, textarea:focus {
+    .login-container h1 {
+      color: #fff;
+      font-size: 20px;
+      margin-bottom: 15px;
+    }
+
+    .logo {
+      width: 90px;
+      margin-bottom: 15px;
+      border-radius: 50%;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border: 1px solid #444;
+      border-radius: 8px;
+      background: #222;
+      color: #fff;
+      font-size: 14px;
       outline: none;
-      box-shadow: 0 0 10px rgba(255,255,255,0.3);
+      transition: border 0.3s;
     }
 
-    /* Efecto sutil de brillo general */
-    .glow {
-      text-shadow: 0 0 20px rgba(255,255,255,0.2);
+    input:focus, select:focus {
+      border: 1px solid #e50914;
     }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-login {
+      background: #fff;
+      color: #000;
+    }
+    .btn-login:hover { background: #ddd; }
+
+    .btn-register {
+      background: #e50914;
+      color: #fff;
+    }
+    .btn-register:hover { background: #b00610; }
+
+    .toggle {
+      font-size: 14px;
+      color: #e50914;
+      cursor: pointer;
+      margin-top: 8px;
+      display: block;
+    }
+
+    #error, #errorRegister {
+      color: red;
+      font-size: 13px;
+      margin-top: 8px;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 480px) {
+      .login-container { padding: 20px; }
+      .logo { width: 70px; }
+    }
+
+
+
+/* ✅ Animación del mensaje bonito */
+.success-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+  animation: fadeIn 0.3s ease;
+}
+
+.success-content {
+  background: linear-gradient(135deg, #111, #1f1f1f);
+  border: 2px solid #22c55e;
+  border-radius: 15px;
+  padding: 30px 40px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 0 25px rgba(34,197,94,0.4);
+  animation: pop 0.5s ease;
+}
+
+.success-content .checkmark {
+  display: inline-block;
+  font-size: 40px;
+  color: #22c55e;
+  margin-bottom: 10px;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pop {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.2); opacity: 0.8; }
+}
+
 
   </style>
+  
 </head>
-
 <body>
-  <div class="fog"></div>
-  <div class="web"></div>
-  <div class="web"></div>
-  <div class="web"></div>
+      <!-- ✨ Mensaje moderno -->
+<div id="successMessage" class="success-popup">
+  <div class="success-content">
+    <span class="checkmark">✔</span>
+    <p>Datos guardados correctamente</p>
+  </div>
+</div>
 
-  <header>
-    <h1 class="glow">Noche de Halloween</h1>
-  </header>
+  <!-- Loader -->
+  <div id="loader">
+    <img src="ComunidadPiura-removebg-preview.png" alt="Logo">
+  </div>
 
-  <main>
-    <h2 class="glow">Bienvenido a la oscuridad</h2>
-    <p>Disfruta de la atmósfera tenebrosa, sin perder ninguna de tus funciones originales.</p>
-    <button onclick="alert('Todo sigue funcionando perfectamente 👻')">Probar Función</button>
-  </main>
+  <!-- Caja Login -->
+  <div id="loginBox" class="login-container">
+    <h1>Bienvenido a la</h1>
+    <img src="ComunidadPiura-removebg-preview.png" class="logo">
 
-  <footer>
-    <p>&copy; 2025 - Edición Especial Halloween Blanco y Negro</p>
-  </footer>
+    <form id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Correo electrónico" required>
+      <div style="position: relative;">
+        <input type="password" id="loginPassword" placeholder="Contraseña" required>
+        <span onclick="togglePassword('loginPassword')" 
+          style="position:absolute; right:10px; top:50%; transform:translateY(-50%); cursor:pointer; color:#e50914;">👁️</span>
+      </div>
+      <p id="error"></p>
+      <button type="submit" class="btn btn-login">Ingresar</button>
+    </form>
 
-  <!-- Tu JS, Firebase y demás scripts permanecen igual -->
-  <script>
-    // (Tu código JS original aquí — no se modificó nada)
-  </script>
+    <div class="toggle" onclick="showRegister()">¿No tienes cuenta? Regístrate</div>
+    <div class="toggle" onclick="resetPassword()">¿Olvidaste tu contraseña?</div>
+  </div>
+
+  <!-- Caja Registro -->
+  <div id="registerBox" class="login-container">
+    <h1>Crear Cuenta</h1>
+    <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcReMJly0vwqQtfircDFDpZwXu18Sd3bSMIOsRRLQyJ0irbFg3KC" class="logo">
+
+    <form id="registerForm">
+      <input type="text" id="nombre" placeholder="Nombre" required>
+      <input type="text" id="apellidos" placeholder="Apellidos" required>
+      <input type="email" id="registerEmail" placeholder="Correo electrónico" required>
+      <input type="password" id="registerPassword" placeholder="Contraseña" required oninput="checkStrength(this.value)">
+      <div id="strengthBar" style="height:6px; border-radius:3px; margin-top:5px; background:#222;"></div>
+      <input type="text" id="celular" placeholder="Celular" required>
+      <input type="text" id="departamento" value="Piura" disabled>
+      <input type="text" id="provincia" placeholder="Provincia" required>
+      <input type="text" id="distrito" placeholder="Distrito" required>
+      <select id="genero" required>
+        <option value="">Selecciona género</option>
+        <option value="Hombre">Hombre</option>
+        <option value="Mujer">Mujer</option>
+      </select>
+      <p id="errorRegister"></p>
+      <button type="submit" class="btn btn-register">Crear Cuenta</button>
+    </form>
+
+    <div class="toggle" onclick="showLogin()">¿Ya tienes cuenta? Inicia sesión</div>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+  import { 
+    initializeApp 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { 
+    getAuth, 
+    signInWithEmailAndPassword, 
+    createUserWithEmailAndPassword, 
+    sendPasswordResetEmail, 
+    sendEmailVerification,
+    setPersistence, 
+    browserSessionPersistence 
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore,
+    doc,
+    setDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  // 🔧 CONFIG FIREBASE
+  const firebaseConfig = {
+    apiKey: "AIzaSyD33P7MvrIGbNo1lRSbZBXb4hZoQ_dkjVg",
+    authDomain: "comunidadpiura-fed53.firebaseapp.com",
+    projectId: "comunidadpiura-fed53",
+    storageBucket: "comunidadpiura-fed53.firebasestorage.app",
+    messagingSenderId: "113288016871",
+    appId: "1:113288016871:web:f94f6c6490bcdbca0bc342",
+    measurementId: "G-68EYEMSET9"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  // 🔒 LOGIN (solo si el correo está verificado)
+  document.getElementById("loginForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    setPersistence(auth, browserSessionPersistence)
+      .then(() => signInWithEmailAndPassword(auth, email, password))
+      .then(({ user }) => {
+        if (user.emailVerified) {
+          window.location.href = "home.html"; // ✅ entra solo si está verificado
+        } else {
+          auth.signOut();
+          document.getElementById("error").style.display = "block";
+          document.getElementById("error").innerText = 
+            "⚠️ Verifica tu correo antes de iniciar sesión. Revisa también 'Correo no deseado'.";
+        }
+      })
+      .catch(err => {
+        document.getElementById("error").style.display = "block";
+        document.getElementById("error").innerText = err.message;
+      });
+  });
+
+  // 🧾 REGISTRO CON VERIFICACIÓN DE CORREO
+  document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById("nombre").value;
+    const apellidos = document.getElementById("apellidos").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+    const celular = document.getElementById("celular").value;
+    const departamento = document.getElementById("departamento").value;
+    const provincia = document.getElementById("provincia").value;
+    const distrito = document.getElementById("distrito").value;
+    const genero = document.getElementById("genero").value;
+
+    try {
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // 📩 Enviar correo de verificación
+      await sendEmailVerification(user);
+
+      // 📄 Guardar datos en Firestore
+      await setDoc(doc(db, "usuarios", user.uid), {
+        nombre,
+        apellidos,
+        email,
+        celular,
+        departamento,
+        provincia,
+        distrito,
+        genero,
+        fechaRegistro: new Date().toISOString(),
+        verificado: false
+      });
+
+      showSuccess();
+
+      // 🔔 Mostrar mensaje al usuario
+      alert("Se ha enviado un enlase de verificación a tu correo.\nVerifica en 'No deseados' si no lo ves.");
+
+      // ❌ Cerrar sesión hasta que confirme
+      setTimeout(() => {
+        auth.signOut();
+        showLogin();
+      }, 3000);
+
+    } catch (error) {
+      document.getElementById("errorRegister").style.display = "block";
+      document.getElementById("errorRegister").innerText = error.message;
+    }
+  });
+
+  // 🔄 RECUPERAR CONTRASEÑA
+  window.resetPassword = function() {
+    const email = prompt("Ingresa tu correo para recuperar tu contraseña:");
+    if (email) {
+      sendPasswordResetEmail(auth, email)
+        .then(() => alert("📧 Se ha enviado un enlace de recuperación a tu correo."))
+        .catch(err => alert(err.message));
+    }
+  };
+
+  // 🧭 MOSTRAR/OCULTAR SECCIONES
+  window.showRegister = function() {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("registerBox").style.display = "block";
+  };
+
+  window.showLogin = function() {
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+  };
+
+  // 👁️ MOSTRAR/OCULTAR CONTRASEÑA
+  window.togglePassword = function(id) {
+    const input = document.getElementById(id);
+    input.type = input.type === "password" ? "text" : "password";
+  };
+
+  // 💪 BARRA DE FUERZA
+  window.checkStrength = function(password) {
+    const bar = document.getElementById("strengthBar");
+    let strength = 0;
+    if (password.length > 5) strength++;
+    if (/[A-Z]/.test(password)) strength++;
+    if (/[0-9]/.test(password)) strength++;
+    if (/[^A-Za-z0-9]/.test(password)) strength++;
+    const colors = ["#ef4444","#f97316","#facc15","#22c55e"];
+    bar.style.background = colors[strength-1] || "#222";
+    bar.style.width = (strength*25) + "%";
+  };
+
+  // ⏳ LOADER
+  window.onload = function() {
+    setTimeout(() => {
+      const loader = document.getElementById('loader');
+      loader.style.opacity = "0";
+      setTimeout(() => {
+        loader.style.display = 'none';
+        document.getElementById('loginBox').style.display = 'block';
+      }, 1000);
+    }, 2000);
+  };
+
+  // ✅ MENSAJE BONITO DE ÉXITO
+  window.showSuccess = function() {
+    const msg = document.getElementById("successMessage");
+    msg.style.display = "flex";
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 2000);
+  };
+</script>
 </body>
 </html>
