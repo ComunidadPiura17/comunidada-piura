@@ -1,400 +1,217 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Sorteos — Halloween</title>
-
-  <!-- Tipografías (encabezado temático + texto legible) -->
-  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sorteos Halloween 🎃</title>
   <style>
-    :root{
-      --bg-dark: #060606;
-      --panel: rgba(255,255,255,0.03);
-      --accent: #ff7a00; /* naranja principal */
-      --accent-2: #ffb347; /* naranja suave */
-      --gold: #ffdd57;
-      --muted: rgba(255,255,255,0.06);
-      --glass: rgba(255,255,255,0.04);
-      --shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-
-    /* Reset y base */
-    * { box-sizing: border-box; }
-    html,body { height:100%; }
     body {
-      margin:0;
-      font-family: "Inter", Arial, sans-serif;
-      background: radial-gradient(ellipse at 10% 10%, rgba(255,122,0,0.04) 0%, transparent 15%),
-                  radial-gradient(ellipse at 90% 85%, rgba(255,183,71,0.03) 0%, transparent 12%),
-                  linear-gradient(180deg, #020202 0%, #0a0a0a 60%);
-      color: #fff;
-      overflow-x:hidden;
-      -webkit-font-smoothing:antialiased;
-      -moz-osx-font-smoothing:grayscale;
+      margin: 0;
+      font-family: "Poppins", Arial, sans-serif;
+      background: radial-gradient(circle at center, #0d0d0d, #000000 90%);
+      color: #ffb347;
+      overflow-x: hidden;
+      animation: parpadeoFondo 8s infinite alternate;
     }
 
-    /* Fondo animado de humo / luces (sutil) */
-    .bg-anim {
-      pointer-events:none;
-      position:fixed;
-      inset:0;
-      z-index:0;
-      overflow:hidden;
-      mix-blend-mode:screen;
-    }
-    .bg-anim::before, .bg-anim::after {
-      content:"";
-      position:absolute;
-      width:160%;
-      height:160%;
-      left:-30%;
-      top:-30%;
-      background-repeat:no-repeat;
-      background-size:cover;
-      opacity:0.12;
-      filter:blur(40px) saturate(1.1);
-      animation: drift 18s linear infinite;
-    }
-    .bg-anim::before {
-      background-image: url('https://images.unsplash.com/photo-1532550907404-4f4b3f3b11f6?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=9e6e3f8f316c0f9a2b0b11d3a6c4f9f5'); /* humo / nubes oscuras */
-      transform-origin:center;
-      animation-duration:26s;
-      mix-blend-mode:overlay;
-      opacity:0.07;
-    }
-    .bg-anim::after {
-      background-image: url('https://images.unsplash.com/photo-1505567742776-6c8ff8f5b19b?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=af7c4b8b6f2a1b8a8f5e4b3a9c2d7f1e'); /* luces cálidas desenfocadas */
-      transform-origin:center;
-      animation-duration:20s;
-      opacity:0.08;
-      mix-blend-mode:screen;
-    }
-    @keyframes drift {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-6%) rotate(2deg); }
-      100% { transform: translateY(0) rotate(0deg); }
+    @keyframes parpadeoFondo {
+      from { background-color: #0a0a0a; }
+      to { background-color: #1a0000; }
     }
 
-    /* Decoraciones flotantes (calabazas y murciélagos) */
-    .decor {
-      position:fixed;
-      z-index:1;
-      pointer-events:none;
-      mix-blend-mode:normal;
-      opacity:0.95;
-    }
-    .decor img { display:block; max-width:140px; width:100%; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.7)); }
-    .decor.top-left { left:-10px; top:10px; transform:rotate(-8deg); animation: floaty 6s ease-in-out infinite; }
-    .decor.bottom-right { right:-20px; bottom:10px; transform:rotate(6deg); animation: floaty 8s ease-in-out infinite; }
-    .decor.top-right { right:30px; top:40px; transform:scale(0.9) rotate(-6deg); animation: floaty 7s ease-in-out infinite; }
-    @keyframes floaty {
-      0% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(2deg); }
-      100% { transform: translateY(0) rotate(0deg); }
-    }
-
-    /* Layout principal */
-    .container {
-      position:relative;
-      z-index:5;
-      max-width:1100px;
-      margin:40px auto;
-      padding:28px;
-      display:grid;
-      grid-template-columns: 1fr 380px;
-      gap:22px;
-      align-items:start;
-    }
-
-    /* Header moderno */
     header {
-      grid-column:1 / -1;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding:18px 22px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:14px;
-      box-shadow: var(--shadow);
-      border:1px solid rgba(255,255,255,0.03);
-      position:relative;
-      overflow:hidden;
-    }
-    .title-wrap { display:flex; align-items:center; gap:14px; }
-    .logo {
-      width:56px; height:56px; border-radius:12px;
-      background: linear-gradient(135deg, rgba(255,122,0,0.18), rgba(255,183,71,0.12));
-      display:flex; align-items:center; justify-content:center;
-      font-family: "Creepster", cursive;
-      font-size:22px; color:var(--gold);
-      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
-      box-shadow: 0 6px 20px rgba(255,122,0,0.06) inset;
-    }
-    header h1 {
-      margin:0;
-      font-family: "Creepster", cursive;
-      font-size:28px;
-      color:var(--gold);
-      letter-spacing:2px;
-      text-shadow: 0 2px 16px rgba(255,122,0,0.18);
-    }
-    header p {
-      margin:0;
-      color:rgba(255,255,255,0.6);
-      font-size:0.92rem;
+      text-align: center;
+      font-size: 2.3rem;
+      padding: 1.5rem;
+      background: linear-gradient(90deg, #ff7518, #000, #ff7518);
+      color: #ffeb99;
+      text-shadow: 0 0 20px #ff7518, 0 0 40px #ffb347;
+      border-bottom: 3px solid #ff7518;
+      letter-spacing: 2px;
+      animation: destello 2.5s infinite alternate;
     }
 
-    /* Main column (izquierda) */
-    .main {
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:14px;
-      padding:18px;
-      box-shadow: var(--shadow);
-      border:1px solid rgba(255,255,255,0.03);
-      min-height:220px;
+    @keyframes destello {
+      from { text-shadow: 0 0 10px #ff7518; }
+      to { text-shadow: 0 0 30px #ffa500, 0 0 60px #ff7518; }
     }
 
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
-      border-radius:12px;
-      padding:14px;
-      margin-bottom:14px;
-      border:1px solid rgba(255,255,255,0.02);
-      transition: transform .25s ease, box-shadow .25s ease;
+    section {
+      max-width: 850px;
+      margin: 40px auto;
+      background: rgba(255, 165, 0, 0.05);
+      border: 2px solid rgba(255, 102, 0, 0.3);
+      border-radius: 20px;
+      box-shadow: 0 0 30px rgba(255, 140, 0, 0.3);
+      padding: 25px;
+      backdrop-filter: blur(6px);
+      transition: transform 0.4s, box-shadow 0.4s;
     }
-    .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.6); }
+
+    section:hover {
+      transform: scale(1.03);
+      box-shadow: 0 0 40px rgba(255, 165, 0, 0.7);
+    }
 
     h2 {
-      font-size:1.25rem;
-      margin:0 0 12px 0;
-      color:var(--accent-2);
-      text-shadow: 0 4px 18px rgba(0,0,0,0.6);
-      display:flex;
-      align-items:center;
-      gap:10px;
+      text-align: center;
+      color: #ffa500;
+      text-shadow: 0 0 20px #ffb347, 0 0 30px #ff7518;
+      margin-bottom: 20px;
     }
 
-    /* Lista de premios */
-    .prizes { display:flex; gap:12px; flex-wrap:wrap; }
-    .prize {
-      flex:1 1 180px;
-      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));
-      border-radius:10px;
-      padding:12px;
-      color:#fff;
-      border:1px solid rgba(255,122,0,0.08);
-      position:relative;
-      overflow:hidden;
+    ul {
+      list-style: none;
+      padding: 0;
     }
-    .prize img { width:100%; height:120px; object-fit:cover; border-radius:8px; display:block; margin-bottom:10px; }
-    .prize .title { font-weight:600; color:var(--gold); margin-bottom:6px; }
-    .prize .btn {
-      display:inline-block;
-      margin-top:6px;
-      padding:9px 14px;
-      border-radius:10px;
-      text-decoration:none;
-      font-weight:700;
-      background: linear-gradient(90deg, var(--accent), #ff944d);
-      color:#1b1b1b;
-      box-shadow: 0 6px 20px rgba(255,122,0,0.18), 0 0 40px rgba(255,122,0,0.06);
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .prize .btn:hover { transform:translateY(-4px); box-shadow: 0 18px 40px rgba(255,122,0,0.2); }
 
-    /* Concursantes (panel especial) */
+    li {
+      margin: 15px 0;
+      background: rgba(255, 140, 0, 0.1);
+      border: 1px solid rgba(255, 165, 0, 0.3);
+      padding: 15px;
+      border-radius: 12px;
+      color: #fff3e0;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    li:hover {
+      background: rgba(255, 140, 0, 0.25);
+    }
+
+    img {
+      width: 180px;
+      height: auto;
+      border-radius: 12px;
+      margin: 10px 0;
+      box-shadow: 0 0 15px rgba(255, 102, 0, 0.5);
+      transition: transform 0.3s;
+    }
+
+    img:hover {
+      transform: scale(1.1);
+    }
+
+    .btn {
+      display: inline-block;
+      background: linear-gradient(45deg, #ff7518, #ffb347);
+      color: black;
+      padding: 10px 22px;
+      border-radius: 10px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 0 20px #ff7518;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #ffa500;
+    }
+
     #concursantes {
-      margin-top:12px;
-      padding:12px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-      border-radius:10px;
-      border:1px dashed rgba(255,122,0,0.06);
+      margin-top: 30px;
+      padding: 20px;
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(255, 140, 0, 0.4);
+      border-radius: 15px;
     }
-    #concursantes h3 { margin:0 0 8px 0; color:var(--accent); }
-    #concursantes p { margin:0; color:rgba(255,255,255,0.68); font-size:0.95rem; }
 
-    /* Right column (sidebar) */
-    .sidebar {
-      background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.18));
-      border-radius:14px;
-      padding:18px;
-      box-shadow: var(--shadow);
-      border:1px solid rgba(255,255,255,0.03);
-      min-height:320px;
+    #concursantes h3 {
+      color: #ffb347;
+      text-shadow: 0 0 15px #ff7518;
     }
-    .counter {
-      text-align:center;
-      padding:18px;
-      border-radius:10px;
-      background: linear-gradient(180deg, rgba(255,122,0,0.04), rgba(255,122,0,0.01));
-      margin-bottom:14px;
-      border:1px solid rgba(255,122,0,0.06);
-    }
-    .counter .time {
-      font-size:1.6rem;
-      font-weight:700;
-      letter-spacing:1px;
-      color:var(--gold);
-      text-shadow: 0 8px 30px rgba(255,122,0,0.06);
-    }
-    .ranking {
-      padding:12px;
-      border-radius:10px;
-      background:linear-gradient(180deg, rgba(0,0,0,0.08), rgba(255,255,255,0.01));
-      border:1px solid rgba(255,255,255,0.02);
-    }
-    .ranking li {
-      list-style:none;
-      padding:10px 8px;
-      border-radius:8px;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:10px;
-      margin-bottom:8px;
-      background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
-    }
-    .ranking li span.name { color: #fff; font-weight:600; }
-    .ranking li span.count { color: rgba(255,183,71,0.95); font-weight:700; }
 
-    /* Volver Home (botón grande) */
+    #contador {
+      font-size: 1.8rem;
+      color: #ffeb99;
+      text-align: center;
+      text-shadow: 0 0 15px #ff7518;
+    }
+
     #volverHome {
-      display:block;
-      text-align:center;
-      margin:16px auto 0;
-      padding:12px 18px;
-      border-radius:12px;
-      text-decoration:none;
-      width:90%;
-      font-weight:700;
-      background: linear-gradient(90deg, rgba(255,122,0,0.98), rgba(255,183,71,0.98));
-      color:#110f05;
-      box-shadow: 0 12px 28px rgba(255,122,0,0.12);
-      border:1px solid rgba(255,255,255,0.06);
+      display: block;
+      margin: 40px auto;
+      width: fit-content;
+      padding: 12px 25px;
+      background: linear-gradient(45deg, #ffb347, #ff7518);
+      color: black;
+      font-weight: bold;
+      border-radius: 10px;
+      text-decoration: none;
+      box-shadow: 0 0 20px #ff7518;
+      transition: transform 0.3s;
     }
-    #volverHome:hover { transform:translateY(-4px); box-shadow: 0 22px 50px rgba(255,122,0,0.14); }
 
-    /* Responsive */
-    @media (max-width:980px){
-      .container { grid-template-columns: 1fr; padding:18px; gap:14px; }
-      .decor img { max-width:110px; }
+    #volverHome:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #ffa500;
     }
   </style>
 </head>
 <body>
-  <!-- Fondo animado -->
-  <div class="bg-anim" aria-hidden="true"></div>
+  <header>🎃 BIENVENIDO AL SORTEO HALLOWEEN 🎃</header>
 
-  <!-- Decoraciones (imágenes reales desde internet) -->
-  <div class="decor top-left" aria-hidden="true">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Jack-o%27-lantern_with_smile.svg/512px-Jack-o%27-lantern_with_smile.svg.png" alt="Calabaza" title="Calabaza decorativa">
-  </div>
-  <div class="decor top-right" aria-hidden="true">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bat_silhouette_01.svg/512px-Bat_silhouette_01.svg.png" alt="Murciélago" title="Murciélago">
-  </div>
-  <div class="decor bottom-right" aria-hidden="true">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Halloween-pumpkin.svg/480px-Halloween-pumpkin.svg.png" alt="Pumpkin" title="Decoración">
-  </div>
+  <section>
+    <h2>🕸️ Premios Terroríficamente Geniales</h2>
+    <ul>
+      <li>
+        📱 Smartphone del Terror <br>
+        <img src="https://images.unsplash.com/photo-1598327105586-290ddc6c2930?w=600" alt="Smartphone Halloween">
+        <br>
+        <a href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20el%20Smartphone%20Halloween" class="btn" target="_blank">Participar</a>
+      </li>
+      <li>
+        🎧 Audífonos del Inframundo <br>
+        <img src="https://images.unsplash.com/photo-1585386959984-a41552231693?w=600" alt="Audífonos Gamer Halloween">
+        <br>
+        <a href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20los%20Audífonos%20Halloween" class="btn" target="_blank">Participar</a>
+      </li>
+      <li>
+        💳 Tarjeta de Regalo Fantasmal <br>
+        <img src="https://images.unsplash.com/photo-1611733176684-1c1b9e7c1b6d?w=600" alt="Tarjeta Regalo Halloween">
+        <br>
+        <a href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20la%20Tarjeta%20Halloween" class="btn" target="_blank">Participar</a>
+      </li>
+    </ul>
 
-  <div class="container">
-    <header>
-      <div class="title-wrap">
-        <div class="logo">PIU</div>
-        <div>
-          <h1>𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐</h1>
-          <p>Edición Halloween • Tema oscuro + toques divertidos</p>
-        </div>
-      </div>
-      <div style="text-align:right;">
-        <p style="margin:0; color:rgba(255,255,255,0.7)">Sorteos y premios — participa con seguridad</p>
-      </div>
-    </header>
+    <div id="concursantes">
+      <h3>🕷️ Concursantes Registrados</h3>
+      <p>Aquí aparecerán los nombres de los valientes participantes...</p>
+    </div>
+  </section>
 
-    <!-- COLUMNA PRINCIPAL -->
-    <main class="main" role="main">
-      <!-- Premios destacados -->
-      <section class="card" aria-labelledby="premiosTitle">
-        <h2 id="premiosTitle">🎁 Premios Destacados</h2>
-        <div class="prizes">
-          <article class="prize" aria-label="Smartphone">
-            <img src="https://images.unsplash.com/photo-1568667256549-0940b6a4f3a7?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2dbb1b02f3f3a3a1b6c2f3e5d6a7b8c9" alt="Smartphone moderno">
-            <div class="title">📱 Smartphone</div>
-            <div style="color:rgba(255,255,255,0.75);font-size:0.95rem">Último modelo • batería duradera • cámara Pro</div>
-            <a class="btn" href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20el%20Smartphone" target="_blank" rel="noopener">Participar</a>
-          </article>
+  <section>
+    <h2>🏆 Ranking de Ganadores</h2>
+    <ul>
+      <li>1. Samir 👻 - 3 premios</li>
+      <li>2. Heiner 🕸️ - 2 premios</li>
+      <li>3. Ana 🦇 - 1 premio</li>
+    </ul>
+  </section>
 
-          <article class="prize" aria-label="Audífonos Gamer">
-            <img src="https://images.unsplash.com/photo-1518444026588-6f06a6f0f8d3?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=c8a9f1a2b3c4d5e6f7a8b9c0d1e2f3a4" alt="Audífonos gamer">
-            <div class="title">🎧 Audífonos Gamer</div>
-            <div style="color:rgba(255,255,255,0.75);font-size:0.95rem">Sonido envolvente • micrófono con cancelación</div>
-            <a class="btn" href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20los%20Audífonos%20Gamer" target="_blank" rel="noopener">Participar</a>
-          </article>
+  <section>
+    <h2>⏳ Próximo sorteo en:</h2>
+    <div id="contador">Cargando...</div>
+  </section>
 
-          <article class="prize" aria-label="Tarjeta de regalo">
-            <img src="https://images.unsplash.com/photo-1556742400-b5c6a5f75b3b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d" alt="Tarjeta de regalo">
-            <div class="title">💳 Tarjeta de regalo</div>
-            <div style="color:rgba(255,255,255,0.75);font-size:0.95rem">Usa en grandes tiendas • monto a elección</div>
-            <a class="btn" href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20la%20Tarjeta%20de%20Regalo" target="_blank" rel="noopener">Participar</a>
-          </article>
-        </div>
+  <a id="volverHome" href="#" onclick="volverHome()">🏠 Volver al Inicio</a>
 
-        <!-- Concursantes (no modificado funcionalmente) -->
-        <div id="concursantes" aria-live="polite">
-          <h3>👥 Concursantes</h3>
-          <p>Aquí aparecerán los nombres de los participantes registrados.</p>
-        </div>
-      </section>
-
-      <!-- Ranking de ganadores -->
-      <section class="card" aria-labelledby="rankingTitle">
-        <h2 id="rankingTitle">🏆 Ranking de Ganadores</h2>
-        <ul class="ranking" aria-live="polite" style="margin:0; padding:0;">
-          <li><span class="name">1. Samir</span><span class="count">3</span></li>
-          <li><span class="name">2. Heiner</span><span class="count">2</span></li>
-          <li><span class="name">3. Ana</span><span class="count">1</span></li>
-        </ul>
-      </section>
-
-    </main>
-
-    <!-- SIDEBAR (columna derecha) -->
-    <aside class="sidebar" role="complementary">
-      <div class="counter" aria-labelledby="contadorTitle">
-        <h2 id="contadorTitle" style="margin:0 0 8px 0; font-size:1.05rem; color:var(--accent);">⏳ Próximo sorteo en:</h2>
-        <div id="contador" class="time">Cargando...</div>
-      </div>
-
-      <div class="card" style="margin-bottom:12px;">
-        <h2 style="margin-bottom:10px;">ℹ️ Información</h2>
-        <p style="margin:0;color:rgba(255,255,255,0.72);font-size:0.95rem">
-          Participa con seguridad. Tu sesión y acceso están verificados por el sistema (no se modifica nada del proceso de autenticación).
-        </p>
-      </div>
-
-      <a id="volverHome" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
-    </aside>
-  </div>
-
-  <!-- ================== NO MODIFICAR: JavaScript de seguridad y contador (COPIADO EXACTO) ================== -->
   <script>
-    /* ================== SEGURIDAD MEJORADA ================== */
+    /* === SEGURIDAD MANTENIDA === */
     const autenticado = sessionStorage.getItem("autenticado");
     const referrer = document.referrer;
-
-    // Si no está autenticado y no viene del home.html → redirige al index
     if (autenticado !== "true" && !referrer.includes("home.html")) {
       window.location.href = "index.html";
     }
 
     function volverHome() {
-      // Vuelve al home sin eliminar la sesión
       window.location.href = "home.html";
     }
 
-    /* ================== CONTADOR REGRESIVO ================== */
-    const fechaSorteo = new Date("Oct 15, 2025 20:00:00").getTime();
+    /* === CONTADOR === */
+    const fechaSorteo = new Date("Oct 31, 2025 23:59:59").getTime();
     const x = setInterval(() => {
       const ahora = new Date().getTime();
       const distancia = fechaSorteo - ahora;
@@ -402,13 +219,11 @@
       const horas = Math.floor((distancia % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
       const minutos = Math.floor((distancia % (1000 * 60 * 60)) / (1000 * 60));
       const segundos = Math.floor((distancia % (1000 * 60)) / 1000);
-
       document.getElementById("contador").innerHTML =
         dias + "d " + horas + "h " + minutos + "m " + segundos + "s";
-
       if (distancia < 0) {
         clearInterval(x);
-        document.getElementById("contador").innerHTML = "¡Sorteo en curso!";
+        document.getElementById("contador").innerHTML = "¡El sorteo ha comenzado! 🎃";
       }
     }, 1000);
   </script>
