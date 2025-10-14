@@ -1,188 +1,383 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sorteos</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Sorteos — Halloween</title>
+
+  <!-- Tipografías (encabezado temático + texto legible) -->
+  <link href="https://fonts.googleapis.com/css2?family=Creepster&family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+
   <style>
+    :root{
+      --bg-dark: #060606;
+      --panel: rgba(255,255,255,0.03);
+      --accent: #ff7a00; /* naranja principal */
+      --accent-2: #ffb347; /* naranja suave */
+      --gold: #ffdd57;
+      --muted: rgba(255,255,255,0.06);
+      --glass: rgba(255,255,255,0.04);
+      --shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+
+    /* Reset y base */
+    * { box-sizing: border-box; }
+    html,body { height:100%; }
     body {
-      margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(270deg, #0a192f, #0f3057, #005f73, #028090);
-      background-size: 800% 800%;
-      animation: moverFondo 15s ease infinite;
-      color: white;
-      overflow-x: hidden;
+      margin:0;
+      font-family: "Inter", Arial, sans-serif;
+      background: radial-gradient(ellipse at 10% 10%, rgba(255,122,0,0.04) 0%, transparent 15%),
+                  radial-gradient(ellipse at 90% 85%, rgba(255,183,71,0.03) 0%, transparent 12%),
+                  linear-gradient(180deg, #020202 0%, #0a0a0a 60%);
+      color: #fff;
+      overflow-x:hidden;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
+    /* Fondo animado de humo / luces (sutil) */
+    .bg-anim {
+      pointer-events:none;
+      position:fixed;
+      inset:0;
+      z-index:0;
+      overflow:hidden;
+      mix-blend-mode:screen;
+    }
+    .bg-anim::before, .bg-anim::after {
+      content:"";
+      position:absolute;
+      width:160%;
+      height:160%;
+      left:-30%;
+      top:-30%;
+      background-repeat:no-repeat;
+      background-size:cover;
+      opacity:0.12;
+      filter:blur(40px) saturate(1.1);
+      animation: drift 18s linear infinite;
+    }
+    .bg-anim::before {
+      background-image: url('https://images.unsplash.com/photo-1532550907404-4f4b3f3b11f6?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=9e6e3f8f316c0f9a2b0b11d3a6c4f9f5'); /* humo / nubes oscuras */
+      transform-origin:center;
+      animation-duration:26s;
+      mix-blend-mode:overlay;
+      opacity:0.07;
+    }
+    .bg-anim::after {
+      background-image: url('https://images.unsplash.com/photo-1505567742776-6c8ff8f5b19b?q=80&w=1600&auto=format&fit=crop&ixlib=rb-4.0.3&s=af7c4b8b6f2a1b8a8f5e4b3a9c2d7f1e'); /* luces cálidas desenfocadas */
+      transform-origin:center;
+      animation-duration:20s;
+      opacity:0.08;
+      mix-blend-mode:screen;
+    }
+    @keyframes drift {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-6%) rotate(2deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Decoraciones flotantes (calabazas y murciélagos) */
+    .decor {
+      position:fixed;
+      z-index:1;
+      pointer-events:none;
+      mix-blend-mode:normal;
+      opacity:0.95;
+    }
+    .decor img { display:block; max-width:140px; width:100%; filter: drop-shadow(0 6px 18px rgba(0,0,0,0.7)); }
+    .decor.top-left { left:-10px; top:10px; transform:rotate(-8deg); animation: floaty 6s ease-in-out infinite; }
+    .decor.bottom-right { right:-20px; bottom:10px; transform:rotate(6deg); animation: floaty 8s ease-in-out infinite; }
+    .decor.top-right { right:30px; top:40px; transform:scale(0.9) rotate(-6deg); animation: floaty 7s ease-in-out infinite; }
+    @keyframes floaty {
+      0% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(2deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+
+    /* Layout principal */
+    .container {
+      position:relative;
+      z-index:5;
+      max-width:1100px;
+      margin:40px auto;
+      padding:28px;
+      display:grid;
+      grid-template-columns: 1fr 380px;
+      gap:22px;
+      align-items:start;
+    }
+
+    /* Header moderno */
     header {
-      background: rgba(0,0,0,0.5);
-      color: #ffdd57;
-      padding: 1rem;
-      font-size: 2rem;
-      text-align: center;
-      text-shadow: 0 0 12px #ffdd57, 0 0 24px #ff6f91;
-      border-bottom: 2px solid rgba(255,255,255,0.2);
-      animation: brillo 3s infinite alternate;
+      grid-column:1 / -1;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      padding:18px 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,0.03);
+      position:relative;
+      overflow:hidden;
+    }
+    .title-wrap { display:flex; align-items:center; gap:14px; }
+    .logo {
+      width:56px; height:56px; border-radius:12px;
+      background: linear-gradient(135deg, rgba(255,122,0,0.18), rgba(255,183,71,0.12));
+      display:flex; align-items:center; justify-content:center;
+      font-family: "Creepster", cursive;
+      font-size:22px; color:var(--gold);
+      text-shadow: 0 2px 8px rgba(0,0,0,0.6);
+      box-shadow: 0 6px 20px rgba(255,122,0,0.06) inset;
+    }
+    header h1 {
+      margin:0;
+      font-family: "Creepster", cursive;
+      font-size:28px;
+      color:var(--gold);
+      letter-spacing:2px;
+      text-shadow: 0 2px 16px rgba(255,122,0,0.18);
+    }
+    header p {
+      margin:0;
+      color:rgba(255,255,255,0.6);
+      font-size:0.92rem;
     }
 
-    @keyframes moverFondo {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    /* Main column (izquierda) */
+    .main {
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:14px;
+      padding:18px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,0.03);
+      min-height:220px;
     }
 
-    @keyframes brillo {
-      from { text-shadow: 0 0 8px #ff4081; }
-      to { text-shadow: 0 0 20px #ffdd57, 0 0 40px #ff6f91; }
+    .card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.015), rgba(255,255,255,0.01));
+      border-radius:12px;
+      padding:14px;
+      margin-bottom:14px;
+      border:1px solid rgba(255,255,255,0.02);
+      transition: transform .25s ease, box-shadow .25s ease;
     }
-
-    section {
-      padding: 20px;
-      margin: 20px auto;
-      max-width: 800px;
-      background: rgba(255,255,255,0.05);
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(255,255,255,0.1);
-      backdrop-filter: blur(8px);
-      transition: transform 0.3s;
-    }
-
-    section:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 25px rgba(255, 221, 87, 0.7);
-    }
+    .card:hover { transform: translateY(-6px); box-shadow: 0 18px 40px rgba(0,0,0,0.6); }
 
     h2 {
-      color: #ff6f91;
-      text-shadow: 0 0 10px #ff6f91, 0 0 20px #ffdd57;
-      font-size: 1.8rem;
-      margin-bottom: 15px;
+      font-size:1.25rem;
+      margin:0 0 12px 0;
+      color:var(--accent-2);
+      text-shadow: 0 4px 18px rgba(0,0,0,0.6);
+      display:flex;
+      align-items:center;
+      gap:10px;
     }
 
-    .btn {
-      display: inline-block;
-      padding: 12px 24px;
-      background: linear-gradient(45deg, #ff4081, #ffdd57);
-      color: black;
-      border-radius: 10px;
-      text-decoration: none;
-      transition: transform 0.3s, box-shadow 0.3s;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 0 12px #ff4081, 0 0 24px #ffdd57;
-      margin-top: 10px;
+    /* Lista de premios */
+    .prizes { display:flex; gap:12px; flex-wrap:wrap; }
+    .prize {
+      flex:1 1 180px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.25), rgba(0,0,0,0.15));
+      border-radius:10px;
+      padding:12px;
+      color:#fff;
+      border:1px solid rgba(255,122,0,0.08);
+      position:relative;
+      overflow:hidden;
     }
-
-    .btn:hover {
-      transform: scale(1.15);
-      box-shadow: 0 0 20px #ffdd57, 0 0 40px #ff4081;
+    .prize img { width:100%; height:120px; object-fit:cover; border-radius:8px; display:block; margin-bottom:10px; }
+    .prize .title { font-weight:600; color:var(--gold); margin-bottom:6px; }
+    .prize .btn {
+      display:inline-block;
+      margin-top:6px;
+      padding:9px 14px;
+      border-radius:10px;
+      text-decoration:none;
+      font-weight:700;
+      background: linear-gradient(90deg, var(--accent), #ff944d);
+      color:#1b1b1b;
+      box-shadow: 0 6px 20px rgba(255,122,0,0.18), 0 0 40px rgba(255,122,0,0.06);
+      transition: transform .15s ease, box-shadow .15s ease;
     }
+    .prize .btn:hover { transform:translateY(-4px); box-shadow: 0 18px 40px rgba(255,122,0,0.2); }
 
-    ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    li {
-      margin: 8px 0;
-      background: rgba(255,255,255,0.08);
-      padding: 10px;
-      border-radius: 8px;
-      transition: background 0.3s;
-    }
-
-    li:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
+    /* Concursantes (panel especial) */
     #concursantes {
-      margin-top: 30px;
-      padding: 15px;
-      background: rgba(255,255,255,0.1);
-      border-radius: 10px;
+      margin-top:12px;
+      padding:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:10px;
+      border:1px dashed rgba(255,122,0,0.06);
     }
+    #concursantes h3 { margin:0 0 8px 0; color:var(--accent); }
+    #concursantes p { margin:0; color:rgba(255,255,255,0.68); font-size:0.95rem; }
 
-    #concursantes h3 {
-      color: #ffdd57;
-      text-shadow: 0 0 10px #ffdd57;
-      margin-bottom: 10px;
+    /* Right column (sidebar) */
+    .sidebar {
+      background: linear-gradient(180deg, rgba(0,0,0,0.22), rgba(0,0,0,0.18));
+      border-radius:14px;
+      padding:18px;
+      box-shadow: var(--shadow);
+      border:1px solid rgba(255,255,255,0.03);
+      min-height:320px;
     }
+    .counter {
+      text-align:center;
+      padding:18px;
+      border-radius:10px;
+      background: linear-gradient(180deg, rgba(255,122,0,0.04), rgba(255,122,0,0.01));
+      margin-bottom:14px;
+      border:1px solid rgba(255,122,0,0.06);
+    }
+    .counter .time {
+      font-size:1.6rem;
+      font-weight:700;
+      letter-spacing:1px;
+      color:var(--gold);
+      text-shadow: 0 8px 30px rgba(255,122,0,0.06);
+    }
+    .ranking {
+      padding:12px;
+      border-radius:10px;
+      background:linear-gradient(180deg, rgba(0,0,0,0.08), rgba(255,255,255,0.01));
+      border:1px solid rgba(255,255,255,0.02);
+    }
+    .ranking li {
+      list-style:none;
+      padding:10px 8px;
+      border-radius:8px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:8px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+    }
+    .ranking li span.name { color: #fff; font-weight:600; }
+    .ranking li span.count { color: rgba(255,183,71,0.95); font-weight:700; }
 
+    /* Volver Home (botón grande) */
     #volverHome {
-      display: block;
-      width: fit-content;
-      margin: 20px auto;
-      background: linear-gradient(45deg, #ffdd57, #ff6f91);
-      color: black;
-      padding: 10px 20px;
-      border-radius: 10px;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      box-shadow: 0 0 10px #ffdd57;
-      transition: transform 0.3s;
+      display:block;
+      text-align:center;
+      margin:16px auto 0;
+      padding:12px 18px;
+      border-radius:12px;
+      text-decoration:none;
+      width:90%;
+      font-weight:700;
+      background: linear-gradient(90deg, rgba(255,122,0,0.98), rgba(255,183,71,0.98));
+      color:#110f05;
+      box-shadow: 0 12px 28px rgba(255,122,0,0.12);
+      border:1px solid rgba(255,255,255,0.06);
     }
+    #volverHome:hover { transform:translateY(-4px); box-shadow: 0 22px 50px rgba(255,122,0,0.14); }
 
-    #volverHome:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 20px #ff6f91;
+    /* Responsive */
+    @media (max-width:980px){
+      .container { grid-template-columns: 1fr; padding:18px; gap:14px; }
+      .decor img { max-width:110px; }
     }
   </style>
 </head>
 <body>
-  <header>𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐</header>
+  <!-- Fondo animado -->
+  <div class="bg-anim" aria-hidden="true"></div>
 
-  <!-- Premios destacados -->
-  <section>
-    <h2>🎁 Premios Destacados</h2>
-    <ul>
-      <li>
-        📱 Smartphone <br>
-        <img src="https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/iphone-17pro-digitalmat-gallery-1-202509_GEO_EMEA?wid=728&hei=666&fmt=p-jpg&qlt=95" 
-             alt="iPhone" style="width:150px; border-radius:12px; margin-top:8px;"><br>
-        <a href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20el%20Smartphone" class="btn" target="_blank">Participar</a>
-      </li>
-      <li>
-        🎧 Audífonos Gamer <br>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Gaming_Headset.png" 
-             alt="Audífonos Gamer" style="width:150px; border-radius:12px; margin-top:8px;"><br>
-        <a href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20los%20Audífonos%20Gamer" class="btn" target="_blank">Participar</a>
-      </li>
-      <li>
-        💳 Tarjeta de regalo <br>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/Amazon_Gift_Card_logo.svg/2560px-Amazon_Gift_Card_logo.svg.png" 
-             alt="Tarjeta de regalo" style="width:150px; border-radius:12px; margin-top:8px;"><br>
-        <a href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20la%20Tarjeta%20de%20Regalo" class="btn" target="_blank">Participar</a>
-      </li>
-    </ul>
+  <!-- Decoraciones (imágenes reales desde internet) -->
+  <div class="decor top-left" aria-hidden="true">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Jack-o%27-lantern_with_smile.svg/512px-Jack-o%27-lantern_with_smile.svg.png" alt="Calabaza" title="Calabaza decorativa">
+  </div>
+  <div class="decor top-right" aria-hidden="true">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/16/Bat_silhouette_01.svg/512px-Bat_silhouette_01.svg.png" alt="Murciélago" title="Murciélago">
+  </div>
+  <div class="decor bottom-right" aria-hidden="true">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Halloween-pumpkin.svg/480px-Halloween-pumpkin.svg.png" alt="Pumpkin" title="Decoración">
+  </div>
 
-    <!-- Div para concursantes -->
-    <div id="concursantes">
-      <h3>👥 Concursantes</h3>
-      <p>Aquí aparecerán los nombres de los participantes registrados.</p>
-    </div>
-  </section>
+  <div class="container">
+    <header>
+      <div class="title-wrap">
+        <div class="logo">PIU</div>
+        <div>
+          <h1>𝓑𝓘𝓔𝓝𝓥𝓔𝓝𝓘𝓓𝓞 𝓐 𝓛𝓐 𝓒𝓞𝓜𝓤𝓝𝓘𝓓𝓐𝓓 𝓟𝓘𝓤𝓡𝓐</h1>
+          <p>Edición Halloween • Tema oscuro + toques divertidos</p>
+        </div>
+      </div>
+      <div style="text-align:right;">
+        <p style="margin:0; color:rgba(255,255,255,0.7)">Sorteos y premios — participa con seguridad</p>
+      </div>
+    </header>
 
-  <!-- Ranking de ganadores -->
-  <section>
-    <h2>🏆 Ranking de Ganadores</h2>
-    <ul>
-      <li>1. Samir - 3 premios</li>
-      <li>2. Heiner - 2 premios</li>
-      <li>3. Ana - 1 premio</li>
-    </ul>
-  </section>
+    <!-- COLUMNA PRINCIPAL -->
+    <main class="main" role="main">
+      <!-- Premios destacados -->
+      <section class="card" aria-labelledby="premiosTitle">
+        <h2 id="premiosTitle">🎁 Premios Destacados</h2>
+        <div class="prizes">
+          <article class="prize" aria-label="Smartphone">
+            <img src="https://images.unsplash.com/photo-1568667256549-0940b6a4f3a7?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=2dbb1b02f3f3a3a1b6c2f3e5d6a7b8c9" alt="Smartphone moderno">
+            <div class="title">📱 Smartphone</div>
+            <div style="color:rgba(255,255,255,0.75);font-size:0.95rem">Último modelo • batería duradera • cámara Pro</div>
+            <a class="btn" href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20el%20Smartphone" target="_blank" rel="noopener">Participar</a>
+          </article>
 
-  <!-- Contador -->
-  <section>
-    <h2>⏳ Próximo sorteo en:</h2>
-    <div id="contador">Cargando...</div>
-  </section>
+          <article class="prize" aria-label="Audífonos Gamer">
+            <img src="https://images.unsplash.com/photo-1518444026588-6f06a6f0f8d3?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=c8a9f1a2b3c4d5e6f7a8b9c0d1e2f3a4" alt="Audífonos gamer">
+            <div class="title">🎧 Audífonos Gamer</div>
+            <div style="color:rgba(255,255,255,0.75);font-size:0.95rem">Sonido envolvente • micrófono con cancelación</div>
+            <a class="btn" href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20los%20Audífonos%20Gamer" target="_blank" rel="noopener">Participar</a>
+          </article>
 
-  <!-- Botón volver -->
-  <a id="volverHome" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
+          <article class="prize" aria-label="Tarjeta de regalo">
+            <img src="https://images.unsplash.com/photo-1556742400-b5c6a5f75b3b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d" alt="Tarjeta de regalo">
+            <div class="title">💳 Tarjeta de regalo</div>
+            <div style="color:rgba(255,255,255,0.75);font-size:0.95rem">Usa en grandes tiendas • monto a elección</div>
+            <a class="btn" href="https://wa.me/51999999999?text=Hola,%20quiero%20participar%20por%20la%20Tarjeta%20de%20Regalo" target="_blank" rel="noopener">Participar</a>
+          </article>
+        </div>
 
+        <!-- Concursantes (no modificado funcionalmente) -->
+        <div id="concursantes" aria-live="polite">
+          <h3>👥 Concursantes</h3>
+          <p>Aquí aparecerán los nombres de los participantes registrados.</p>
+        </div>
+      </section>
+
+      <!-- Ranking de ganadores -->
+      <section class="card" aria-labelledby="rankingTitle">
+        <h2 id="rankingTitle">🏆 Ranking de Ganadores</h2>
+        <ul class="ranking" aria-live="polite" style="margin:0; padding:0;">
+          <li><span class="name">1. Samir</span><span class="count">3</span></li>
+          <li><span class="name">2. Heiner</span><span class="count">2</span></li>
+          <li><span class="name">3. Ana</span><span class="count">1</span></li>
+        </ul>
+      </section>
+
+    </main>
+
+    <!-- SIDEBAR (columna derecha) -->
+    <aside class="sidebar" role="complementary">
+      <div class="counter" aria-labelledby="contadorTitle">
+        <h2 id="contadorTitle" style="margin:0 0 8px 0; font-size:1.05rem; color:var(--accent);">⏳ Próximo sorteo en:</h2>
+        <div id="contador" class="time">Cargando...</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;">
+        <h2 style="margin-bottom:10px;">ℹ️ Información</h2>
+        <p style="margin:0;color:rgba(255,255,255,0.72);font-size:0.95rem">
+          Participa con seguridad. Tu sesión y acceso están verificados por el sistema (no se modifica nada del proceso de autenticación).
+        </p>
+      </div>
+
+      <a id="volverHome" href="#" onclick="volverHome()">🏠 Volver a la página principal</a>
+    </aside>
+  </div>
+
+  <!-- ================== NO MODIFICAR: JavaScript de seguridad y contador (COPIADO EXACTO) ================== -->
   <script>
     /* ================== SEGURIDAD MEJORADA ================== */
     const autenticado = sessionStorage.getItem("autenticado");
