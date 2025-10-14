@@ -5,18 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sorteos Halloween 🎃</title>
   <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
     body {
-      margin: 0;
       font-family: "Poppins", Arial, sans-serif;
       background: radial-gradient(circle at center, #0d0d0d, #000000 90%);
       color: #ffb347;
       overflow-x: hidden;
-      animation: parpadeoFondo 8s infinite alternate;
+      position: relative;
+      min-height: 100vh;
     }
 
-    @keyframes parpadeoFondo {
-      from { background-color: #0a0a0a; }
-      to { background-color: #1a0000; }
+    canvas#webCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none; /* No bloquea clics */
+    }
+
+    header, section, a {
+      position: relative;
+      z-index: 2;
     }
 
     header {
@@ -27,7 +39,6 @@
       color: #ffeb99;
       text-shadow: 0 0 20px #ff7518, 0 0 40px #ffb347;
       border-bottom: 3px solid #ff7518;
-      letter-spacing: 2px;
       animation: destello 2.5s infinite alternate;
     }
 
@@ -60,10 +71,7 @@
       margin-bottom: 20px;
     }
 
-    ul {
-      list-style: none;
-      padding: 0;
-    }
+    ul { list-style: none; padding: 0; }
 
     li {
       margin: 15px 0;
@@ -76,22 +84,17 @@
       transition: background 0.3s;
     }
 
-    li:hover {
-      background: rgba(255, 140, 0, 0.25);
-    }
+    li:hover { background: rgba(255, 140, 0, 0.25); }
 
     img {
       width: 180px;
-      height: auto;
       border-radius: 12px;
       margin: 10px 0;
       box-shadow: 0 0 15px rgba(255, 102, 0, 0.5);
       transition: transform 0.3s;
     }
 
-    img:hover {
-      transform: scale(1.1);
-    }
+    img:hover { transform: scale(1.1); }
 
     .btn {
       display: inline-block;
@@ -151,6 +154,9 @@
   </style>
 </head>
 <body>
+  <!-- Telaraña -->
+  <canvas id="webCanvas"></canvas>
+
   <header>🎃 BIENVENIDO AL SORTEO HALLOWEEN 🎃</header>
 
   <section>
@@ -226,6 +232,76 @@
         document.getElementById("contador").innerHTML = "¡El sorteo ha comenzado! 🎃";
       }
     }, 1000);
+
+    /* === TELARAÑA INTERACTIVA === */
+    const canvas = document.getElementById('webCanvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+    const puntos = [];
+    const numPuntos = 100;
+
+    for (let i = 0; i < numPuntos; i++) {
+      puntos.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5
+      });
+    }
+
+    let mouse = { x: null, y: null };
+    window.addEventListener('mousemove', e => {
+      mouse.x = e.x;
+      mouse.y = e.y;
+    });
+
+    function animar() {
+      ctx.clearRect(0, 0, width, height);
+      for (let i = 0; i < numPuntos; i++) {
+        const p = puntos[i];
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0 || p.x > width) p.vx *= -1;
+        if (p.y < 0 || p.y > height) p.vy *= -1;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,165,0,0.7)";
+        ctx.fill();
+
+        for (let j = i + 1; j < numPuntos; j++) {
+          const p2 = puntos[j];
+          const dx = p.x - p2.x;
+          const dy = p.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255,140,0,${1 - dist / 120})`;
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+
+        if (mouse.x && Math.abs(mouse.x - p.x) < 120 && Math.abs(mouse.y - p.y) < 120) {
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(255,255,255,0.4)";
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mouse.x, mouse.y);
+          ctx.stroke();
+        }
+      }
+      requestAnimationFrame(animar);
+    }
+
+    animar();
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
   </script>
 </body>
 </html>
